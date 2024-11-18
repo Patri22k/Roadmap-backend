@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -16,12 +17,22 @@ type Task struct {
 	UpdateAt    time.Time `json:"updateAt"`
 }
 
+// TODO:
+/*
+- optimilize the code
+- create more functions
+- move functions to new files
+- maybe add new features
+- change printing some options like `list <done/todo>`
+*/
+
 func main() {
+	// Save file name with which the whole project will work
 	filename := "tasks.json"
 
 	if len(os.Args) < 2 {
 		fmt.Println("Please write a valid command. For help write 'help'")
-		return
+		os.Exit(1)
 	}
 
 	// Check if the user has provided any command
@@ -43,15 +54,54 @@ func main() {
 		tasks = append(tasks, task)
 
 		// Save the updated tasks list
-		writeTasks(filename, tasks)
+		writeNewTasks(filename, tasks)
 
-		// Test
+		// Print the updated task
 		fmt.Printf("Task added: %v\n", task)
-		return
 
 	} else if os.Args[1] == "update" && len(os.Args) == 4 {
 
 		// UPDATE
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Convert the ID from terminal to int
+		idFromTerminal, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("Error converting id from terminal to int: ", err)
+			os.Exit(1)
+		}
+
+		// Check if the ID exists in the file
+		var notId bool = false
+		for index := range tasks {
+			if tasks[index].ID == idFromTerminal {
+				tasks[index].Description = os.Args[3]
+				notId = true
+			}
+		}
+
+		// Check if the id in the file exists
+		if !notId {
+			fmt.Printf("ID %d doesn't exist in the file %s\n", idFromTerminal, filename)
+			os.Exit(1)
+		}
+
+		// Marshal it back to the JSON file
+		data, err := json.Marshal(tasks)
+		if err != nil {
+			fmt.Println("Error marshaling the file ", err)
+			os.Exit(1)
+		}
+
+		err = os.WriteFile(filename, data, 0644)
+		if err != nil {
+			fmt.Println("Error writing to the file ", err)
+			os.Exit(1)
+		}
+
+		// Print the updated tasks
+		printTasks(tasks)
 
 	} else if os.Args[1] == "delete" && len(os.Args) == 3 {
 
@@ -62,7 +112,7 @@ func main() {
 		taskToBeDeletedId, err := strconv.Atoi(taskToBeDeletedIdString)
 		if err != nil {
 			fmt.Println("Conversion error, for more information write `help`")
-			return
+			os.Exit(1)
 		}
 
 		// Remove the task and save it
@@ -72,21 +122,96 @@ func main() {
 		updatedFile = repairID(updatedFile)
 
 		// Write it back to the json
-		writeTasks(filename, updatedFile)
+		writeNewTasks(filename, updatedFile)
 
-		// Print the result of the updated file
-		fmt.Println("Your updated file is: ")
-		for _, updatedTask := range updatedFile {
-			fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", updatedTask.ID, updatedTask.Description, updatedTask.Status, updatedTask.CreateAt.String())
-		}
+		// Print the updated tasks
+		printTasks(updatedFile)
 
 	} else if os.Args[1] == "mark-in-progress" && len(os.Args) == 3 {
 
 		// MARK IN-PROGRESS
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Convert input ID from terminal to int
+		taskId, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("Error converting input ID to int: ", err)
+			os.Exit(1)
+		}
+
+		// Change the status by id and if the id doesn't exist, terminate
+		var taskIdNotExist bool = false
+		for index := range tasks {
+			if tasks[index].ID == taskId {
+				tasks[index].Status = "in-progress"
+				taskIdNotExist = true
+			}
+		}
+
+		if !taskIdNotExist {
+			fmt.Printf("The given ID %d doesn't exist in the file %s\n", taskId, filename)
+			os.Exit(1)
+		}
+
+		// Write updated task back to JSON
+		data, err := json.Marshal(tasks)
+		if err != nil {
+			fmt.Println("Error marshaling the file: ", err)
+			os.Exit(1)
+		}
+
+		err = os.WriteFile(filename, data, 0644)
+		if err != nil {
+			fmt.Println("Error writing to the file: ", err)
+			os.Exit(1)
+		}
+
+		// Print the updated tasks
+		printTasks(tasks)
 
 	} else if os.Args[1] == "mark-done" && len(os.Args) == 3 {
 
 		// MARK DONE
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Convert input ID from terminal to int
+		taskId, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("Error converting input ID to int: ", err)
+			os.Exit(1)
+		}
+
+		// Change the status by id and if the id doesn't exist, terminate
+		var taskIdNotExist bool = false
+		for index := range tasks {
+			if tasks[index].ID == taskId {
+				tasks[index].Status = "done"
+				taskIdNotExist = true
+			}
+		}
+
+		if !taskIdNotExist {
+			fmt.Printf("The given ID %d doesn't exist in the file %s\n", taskId, filename)
+			os.Exit(1)
+		}
+
+		// Write updated task back to JSON
+		data, err := json.Marshal(tasks)
+		if err != nil {
+			fmt.Println("Error marshaling the file: ", err)
+			os.Exit(1)
+		}
+
+		err = os.WriteFile(filename, data, 0644)
+		if err != nil {
+			fmt.Println("Error writing to the file: ", err)
+			os.Exit(1)
+		}
+
+		// Print the updated tasks
+		printTasks(tasks)
 
 	} else if os.Args[1] == "list" && len(os.Args) == 2 {
 
@@ -95,23 +220,71 @@ func main() {
 		// Save all tasks from file to a variable
 		readTask := readTasks(filename)
 
-		// Print all tasks
-		fmt.Println("All tasks:")
-		for _, elem := range readTask {
-			fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
-		}
+		// Print the updated tasks
+		printTasks(readTask)
 
 	} else if os.Args[1] == "list" && os.Args[2] == "done" {
 
 		// LIST DONE
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Iterate through the file and find only status = "Done"
+		var atLeastOneDoneStatus bool = false
+		for index, elem := range tasks {
+			if tasks[index].Status == "done" {
+				fmt.Printf("ID: %-5d, Description: %-20s, Status: %-15s, Created at: %-12s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
+				atLeastOneDoneStatus = true
+			}
+		}
+
+		// Check if at least one status was true
+		if !atLeastOneDoneStatus {
+			fmt.Println("No task is marked 'Done'")
+		}
+		return
 
 	} else if os.Args[1] == "list" && os.Args[2] == "todo" {
 
 		// TODO LIST
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Iterate through the file and find only status = "Done"
+		var atLeastOneDoneStatus bool = false
+		for index, elem := range tasks {
+			if tasks[index].Status == "pending" {
+				fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
+				atLeastOneDoneStatus = true
+			}
+		}
+
+		// Check if at least one status was true
+		if !atLeastOneDoneStatus {
+			fmt.Println("No task is marked 'Pending'")
+		}
+		return
 
 	} else if os.Args[1] == "list" && os.Args[2] == "in-progress" {
 
 		// LIST IN-PROGRESS
+		// Read the file
+		tasks := readTasks(filename)
+
+		// Iterate through the file and find only status = "Done"
+		var atLeastOneDoneStatus bool = false
+		for index, elem := range tasks {
+			if tasks[index].Status == "in-progress" {
+				fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
+				atLeastOneDoneStatus = true
+			}
+		}
+
+		// Check if at least one status was true
+		if !atLeastOneDoneStatus {
+			fmt.Println("No task is marked 'Done'")
+		}
+		return
 
 	} else if os.Args[1] == "help" && len(os.Args) == 2 {
 
@@ -189,8 +362,8 @@ func readTasks(filename string) []Task {
 	return tasks
 }
 
-// Function writeTasks add taskToBeAdded to the filename
-func writeTasks(filename string, taskToBeAdded []Task) {
+// Function writeNewTasks add taskToBeAdded to the filename
+func writeNewTasks(filename string, taskToBeAdded []Task) {
 	data, err := json.MarshalIndent(taskToBeAdded, "", " ")
 	if err != nil {
 		fmt.Println("Error marshaling the tasks: ", err)
@@ -202,6 +375,21 @@ func writeTasks(filename string, taskToBeAdded []Task) {
 		fmt.Println("Error writing to the file: ", err)
 		os.Exit(1)
 	}
+}
+
+// Function for printing the header and the updated file of tasks
+func printTasks(tasks []Task) {
+	// Print table header
+	fmt.Printf("\n%-5s %-20s %-15s %-12s\n", "ID", "Description", "Status", "Created at")
+	fmt.Println(strings.Repeat("-", 100))
+
+	// Print the updated tasks
+	for _, elem := range tasks {
+		fmt.Printf("%-5d %-20s %-15s %-12s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt)
+	}
+
+	// Add new line at the end
+	fmt.Println()
 }
 
 func deleteTask(filename string, taskToBEDeletedId int) []Task {
