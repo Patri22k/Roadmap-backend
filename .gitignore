@@ -1,5 +1,4 @@
 .git
 .idea/
-awesomeProject/
-go.mod
+awesomeProject
 tasks.json
