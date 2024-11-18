@@ -145,19 +145,7 @@ func generateID() int {
 	}
 
 	// Read the file
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		fmt.Println("Error reading the file", err)
-		return -1
-	}
-
-	// Unmarshaling the JSON to a struct
-	var tasks []Task
-	err = json.Unmarshal(data, &tasks)
-	if err != nil {
-		fmt.Println("Error unmarshaling the tasks", err)
-		return -1
-	}
+	tasks := readTasks(filename)
 
 	// Find the highest ID
 	highestID := 0
@@ -217,23 +205,7 @@ func writeTasks(filename string, taskToBeAdded []Task) {
 }
 
 func deleteTask(filename string, taskToBEDeletedId int) []Task {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		// Check if the file doesn't exist
-		if os.IsNotExist(err) {
-			return []Task{}
-		}
-		fmt.Println("Error reading the file: ", err)
-		os.Exit(1)
-	}
-
-	// Unmarshal the file
-	var tasks []Task
-	err = json.Unmarshal(data, &tasks)
-	if err != nil {
-		fmt.Println("Error unmarshaling the file: ", err)
-		os.Exit(1)
-	}
+	tasks := readTasks(filename)
 
 	// Remove the task based on the given ID
 	var updatedTasks []Task
