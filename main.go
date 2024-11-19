@@ -8,12 +8,13 @@ import (
 	"strings"
 	"task-cli/models"
 	"task-cli/utils"
+	"task-cli/utils/tests"
 	"time"
 )
 
 func main() {
 	// Save file name with which the whole project will work
-	filename := "tasks.json"
+	filename := tests.GetTaskFilePath()
 
 	if len(os.Args) < 2 {
 		fmt.Println("Please write a valid command. For help write 'help'")
