@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"awesomeProject/models"
 	"encoding/json"
 	"fmt"
 	"os"
+	"task-cli/models"
 )
 
 // Function writeNewTasks add taskToBeAdded to the filename at the end

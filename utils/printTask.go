@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"awesomeProject/models"
 	"fmt"
 	"strings"
+	"task-cli/models"
 )
 
 // Function for printing the file with new changes commited by the user

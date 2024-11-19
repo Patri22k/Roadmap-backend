@@ -1,13 +1,13 @@
 package main
 
 import (
-	"awesomeProject/models"
-	"awesomeProject/utils"
 	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
+	"task-cli/models"
+	"task-cli/utils"
 	"time"
 )
 
@@ -221,7 +221,7 @@ func main() {
 		var atLeastOneDoneStatus bool = false
 		for index, elem := range tasks {
 			if tasks[index].Status == "done" {
-				fmt.Printf("ID: %-5d, Description: %-20s, Status: %-15s, Created at: %-12s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
+				fmt.Printf("ID: %-5d Description: %-20s Status: %-15s Created at: %-12s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
 				atLeastOneDoneStatus = true
 			}
 		}

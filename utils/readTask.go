@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"awesomeProject/models"
 	"encoding/json"
 	"fmt"
 	"os"
+	"task-cli/models"
 )
 
 // Function will read the content of the file `filename`

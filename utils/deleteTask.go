@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"awesomeProject/models"
 	"encoding/json"
 	"fmt"
 	"os"
+	"task-cli/models"
 )
 
 // Function remove task from the json file.
