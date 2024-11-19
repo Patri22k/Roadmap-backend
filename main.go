@@ -217,19 +217,23 @@ func main() {
 		// Read the file
 		tasks := utils.ReadTasks(filename)
 
-		// Iterate through the file and find only status = "Done"
-		var atLeastOneDoneStatus bool = false
-		for index, elem := range tasks {
-			if tasks[index].Status == "done" {
-				fmt.Printf("ID: %-5d Description: %-20s Status: %-15s Created at: %-12s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
-				atLeastOneDoneStatus = true
+		// Iterate through the file and find only status = "done"
+		var doneTasks []models.Task
+		for _, elem := range tasks {
+			if elem.Status == "done" {
+				doneTasks = append(doneTasks, elem)
 			}
 		}
 
-		// Check if at least one status was true
-		if !atLeastOneDoneStatus {
-			fmt.Println("No task is marked 'Done'")
+		// Check if there are any tasks with status "done"
+		if len(doneTasks) == 0 {
+			fmt.Println("No tasks are marked as 'in-progress'")
+			return
 		}
+
+		// Print tasks with "done" status
+		utils.PrintTasks(doneTasks)
+
 		return
 
 	} else if os.Args[1] == "list" && os.Args[2] == "todo" {
@@ -238,19 +242,24 @@ func main() {
 		// Read the file
 		tasks := utils.ReadTasks(filename)
 
-		// Iterate through the file and find only status = "Done"
-		var atLeastOneDoneStatus bool = false
-		for index, elem := range tasks {
-			if tasks[index].Status == "pending" {
-				fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
-				atLeastOneDoneStatus = true
+		// Iterate through the file and find only status = "pending"
+		var pendingTasks []models.Task
+
+		for _, task := range tasks {
+			if task.Status == "pending" {
+				pendingTasks = append(pendingTasks, task)
 			}
 		}
 
-		// Check if at least one status was true
-		if !atLeastOneDoneStatus {
-			fmt.Println("No task is marked 'Pending'")
+		// Check if there are any tasks with status "pending"
+		if len(pendingTasks) == 0 {
+			fmt.Println("No tasks are marked as 'in-progress'")
+			return
 		}
+
+		// Print tasks with "pending" status
+		utils.PrintTasks(pendingTasks)
+
 		return
 
 	} else if os.Args[1] == "list" && os.Args[2] == "in-progress" {
@@ -259,19 +268,23 @@ func main() {
 		// Read the file
 		tasks := utils.ReadTasks(filename)
 
-		// Iterate through the file and find only status = "Done"
-		var atLeastOneDoneStatus bool = false
-		for index, elem := range tasks {
-			if tasks[index].Status == "in-progress" {
-				fmt.Printf("ID: %d, Description: %s, Status: %s, Created at: %s\n", elem.ID, elem.Description, elem.Status, elem.CreateAt.String())
-				atLeastOneDoneStatus = true
+		// Iterate through the file and find only status = "in-progress"
+		var inProgressTasks []models.Task
+		for _, elem := range tasks {
+			if elem.Status == "in-progress" {
+				inProgressTasks = append(inProgressTasks, elem)
 			}
 		}
 
-		// Check if at least one status was true
-		if !atLeastOneDoneStatus {
-			fmt.Println("No task is marked 'Done'")
+		// Check if there are any tasks with status "in-progress"
+		if len(inProgressTasks) == 0 {
+			fmt.Println("No tasks are marked as 'in-progress'")
+			return
 		}
+
+		// Print tasks with "in-progress" status
+		utils.PrintTasks(inProgressTasks)
+
 		return
 
 	} else if os.Args[1] == "help" && len(os.Args) == 2 {
