@@ -4,34 +4,39 @@ This project is a simple Task Tracker CLI application built with Go (Golang). It
 The application allows you to create, update, and delete tasks, making it a great way to get hands-on experience with Go while learning how to structure backend applications.
 
 ## Features
-- **Create a Task:** Add a task with a description based on given ID.
-- **List Tasks:** View all the tasks stored in json file.
-- **Update Task Description**: Modify the task descriptions.
-- **Update Task Status**: Modify the task status.
-- **Delete Task:** Remove tasks from the list.
-- **Simple Storage:** Tasks are stored in a local file for simplicity.
+- Add tasks with descriptions.
+- Update existing tasks by ID.
+- Delete tasks by ID.
+- Mark tasks as `in-progress` or `done`.
+- List tasks based on their status (`pending`, `done`, `in-progress`).
 
-## Installation
-Follow these steps to set up the Task Tracker CLI application:
-1.  **Clone the repository:**
+## Building the Project
+To build the project as an executable, run:
+```go
+go build -o task-cli main.go
+```
+This will create an executable file named task-cli in the current directory.  
+
+## Running the Project
+You can run the project using the executable:
 ```bash
-git clone https://github.com/Patri22k/task-tracker
-cd task-tracker
+./task-cli help
 ```
-2. **Install Dependencies:**  
-If you haven't already, make sure you have Go installed and properly set up. Run the following command to download necessary dependencies (if any):  
-```go
-go mod tidy
+Example commands:
+```bash
+./task-cli add "Finish writing README"
+./task-cli list
+./task-cli mark-done 1
 ```
-3. **Run the application:  
-Once installed, you can start the CLI tool with:  
-```go
+
+## Running Without Building
+If you prefer to run the project directly without building an executable, you can use:  
+```bash
 go run main.go help
 ```
-This will run the application, and you should see all commands and their explanations.
 
-## Usage
-Just type `help`,   
-it's all there,  
-commands and options,  
-without a care.
+## Running Tests  
+To ensure the application works as expected, you can run the tests:
+```bash
+go test ./...
+```
