@@ -11,13 +11,6 @@ import (
 	"time"
 )
 
-// TODO:
-/*
-- optimilize the code
-- maybe add new features
-- change printing some options like `list <done/todo>`
-*/
-
 func main() {
 	// Save file name with which the whole project will work
 	filename := "tasks.json"
