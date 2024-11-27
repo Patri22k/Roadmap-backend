@@ -1,9 +1,13 @@
 {
   "name": "github-user-activity",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "bin/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "release": "npm run build && npm install -g"
+  },
+  "bin": {
+    "github-activity": "./bin/index.js"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +15,8 @@
   "description": "",
   "dependencies": {
     "@types/node": "^22.10.0",
+    "commander": "^12.1.0",
+    "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
