@@ -18,7 +18,12 @@ func TestDeleteTask(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create a temporary file: %v", err)
 	}
-	defer os.Remove(tmpFile.Name())
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+
+		}
+	}(tmpFile.Name())
 
 	// Initialize the file with a task
 	initialTasks := []models.Task{
@@ -28,10 +33,13 @@ func TestDeleteTask(t *testing.T) {
 	if _, err := tmpFile.Write(data); err != nil {
 		t.Fatalf("Failed to initialize temporary file with tasks: %v", err)
 	}
-	tmpFile.Close()
+	err = tmpFile.Close()
+	if err != nil {
+		return
+	}
 
 	// Read tasks to confirm initial state
-	var previousState []models.Task = utils.ReadTasks(tmpFile.Name())
+	var previousState = utils.ReadTasks(tmpFile.Name())
 
 	// Execute the deletion of task ID 1
 	cmd := exec.Command("go", "run", "main.go", "delete", "1")
@@ -42,7 +50,7 @@ func TestDeleteTask(t *testing.T) {
 	}
 
 	// Read tasks again to confirm final state
-	var testState []models.Task = utils.ReadTasks(tmpFile.Name())
+	var testState = utils.ReadTasks(tmpFile.Name())
 
 	// Testing the length of the task list
 	if len(previousState) != len(testState)+1 {
@@ -63,16 +71,24 @@ func TestAddTask(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create a temporary file: %v", err)
 	}
-	defer os.Remove(tmpFile.Name())
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+
+		}
+	}(tmpFile.Name())
 
 	// Initialize the file with an empty JSON array
 	if _, err := tmpFile.Write([]byte("[]")); err != nil {
 		t.Fatalf("Failed to initialize temporary file with empty JSON: %v", err)
 	}
-	tmpFile.Close()
+	err = tmpFile.Close()
+	if err != nil {
+		return
+	}
 
 	// Save all previous tasks from the temporary file
-	var previousState []models.Task = utils.ReadTasks(tmpFile.Name()) // Pass the temp file as env variable
+	var previousState = utils.ReadTasks(tmpFile.Name()) // Pass the temp file as env variable
 
 	// Execute the adding of a task
 	cmd := exec.Command("go", "run", "main.go", "add", "Successfully added test description")
@@ -83,14 +99,14 @@ func TestAddTask(t *testing.T) {
 	}
 
 	// Again saving the content of the file
-	var testState []models.Task = utils.ReadTasks(tmpFile.Name())
+	var testState = utils.ReadTasks(tmpFile.Name())
 
 	// Testing the length of the files
 	if len(previousState) != len(testState)-1 {
 		t.Fatalf("Expected %d tasks, but got %d", len(previousState)+1, len(testState))
 	}
 
-	// Verify the added task by it's unique description
+	// Verify the added task by its unique description
 	taskFound := false
 	for _, elem := range testState {
 		if elem.Description == "Successfully added test description" {
