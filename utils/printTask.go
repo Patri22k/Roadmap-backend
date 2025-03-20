@@ -6,7 +6,7 @@ import (
 	"task-cli/models"
 )
 
-// Function for printing the file with new changes commited by the user
+// PrintTasks prints a file with new changes commited by the user
 func PrintTasks(tasks []models.Task) {
 	// Find the longest description
 	maxDesLen := 20

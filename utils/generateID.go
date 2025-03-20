@@ -2,7 +2,7 @@ package utils
 
 import "os"
 
-// Function created new ID for new task that was created by the user.
+// GenerateID creates new ID for new task that was created by the user.
 // If the file doesn't exist, it will start counting from 1
 func GenerateID() int {
 	filename := "tasks.json"

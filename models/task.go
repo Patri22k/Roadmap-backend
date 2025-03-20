@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-// Initialize structure of Task
+// Task structure initialization
 type Task struct {
 	ID          int       `json:"id"`
 	Description string    `json:"description"`

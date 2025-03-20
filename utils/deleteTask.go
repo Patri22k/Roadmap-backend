@@ -7,14 +7,14 @@ import (
 	"task-cli/models"
 )
 
-// Function remove task from the json file.
+// DeleteTask removes task from the json file.
 // If the task doesn't exist, it will print an error.
 func DeleteTask(filename string, taskToBEDeletedId int) []models.Task {
 	tasks := ReadTasks(filename)
 
 	// Remove the task based on the given ID
 	var updatedTasks []models.Task
-	var idDontExist bool = false
+	var idDontExist = false
 	for _, element := range tasks {
 		if taskToBEDeletedId == element.ID {
 			idDontExist = true

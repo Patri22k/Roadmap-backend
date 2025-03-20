@@ -7,8 +7,8 @@ import (
 	"task-cli/models"
 )
 
-// Function writeNewTasks add taskToBeAdded to the filename at the end
-// of the file.
+// WriteNewTasks add taskToBeAdded
+// to the filename at the end of the file.
 func WriteNewTasks(filename string, taskToBeAdded []models.Task) {
 	data, err := json.MarshalIndent(taskToBeAdded, "", " ")
 	if err != nil {

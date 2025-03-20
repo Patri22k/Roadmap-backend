@@ -7,7 +7,7 @@ import (
 	"task-cli/models"
 )
 
-// Function will read the content of the file `filename`
+// ReadTasks will read the content of the file `filename`
 // and save it to variable `tasks`
 func ReadTasks(filename string) []models.Task {
 	data, err := os.ReadFile(filename)
@@ -20,11 +20,11 @@ func ReadTasks(filename string) []models.Task {
 		os.Exit(1)
 	}
 
-	// Unmarshaling the file
+	// Unmarshalling the file
 	var tasks []models.Task
 	err = json.Unmarshal(data, &tasks)
 	if err != nil {
-		fmt.Println("Error unmarshaling the file", err)
+		fmt.Println("Error unmarshalling the file", err)
 		os.Exit(1)
 	}
 

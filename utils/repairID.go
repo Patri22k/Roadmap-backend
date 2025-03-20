@@ -2,8 +2,8 @@ package utils
 
 import "task-cli/models"
 
-// If task was deleted, this function will update all IDs
-// of tasks, so that the first task will always have the ID of 1
+// RepairID updates all IDs so task will
+// always start from ID 1, if task was deleted.
 func RepairID(tasks []models.Task) []models.Task {
 	// Update the ID of all tasks
 	for index := range tasks {
