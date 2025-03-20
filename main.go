@@ -59,7 +59,7 @@ func main() {
 		}
 
 		// Check if the ID exists in the file and update Description
-		var notId bool = false
+		notId := false
 		for index := range tasks {
 			if tasks[index].ID == idFromTerminal {
 				tasks[index].Description = os.Args[3]
@@ -128,7 +128,7 @@ func main() {
 		}
 
 		// Change the status by id and if the id doesn't exist, terminate
-		var taskIdNotExist bool = false
+		taskIdNotExist := false
 		for index := range tasks {
 			if tasks[index].ID == taskId {
 				tasks[index].Status = "in-progress"
@@ -172,7 +172,7 @@ func main() {
 		}
 
 		// Change the status by id and if the id doesn't exist, terminate
-		var taskIdNotExist bool = false
+		taskIdNotExist := false
 		for index := range tasks {
 			if tasks[index].ID == taskId {
 				tasks[index].Status = "done"
