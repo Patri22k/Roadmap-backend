@@ -56,11 +56,25 @@ program
             const [eventType, repoName] = dataArray.split(" ");
             switch (eventType) {
                 case "PushEvent":
-                    return `Pushed ${count} commit${count > 1 ? `s` : ""} to ${repoName}`;
+                    return `- Pushed ${count} commit${count > 1 ? `s` : ""} to ${repoName}`;
                 case "PullEvent":
-                    return `Pulled ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                    return `- Pulled ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                case "CreateEvent":
+                    return `- Created ${count} time${count > 1 ? `s` : ""} in ${repoName}`;
+                case "ForkEvent":
+                    return `- Forked ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                case "DeleteEvent":
+                    return `- Deleted ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                case "WatchEvent":
+                    return `- Watched ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                case "CommentEvent":
+                    return `- Commented ${count} time${count > 1 ? `s` : ""} in ${repoName}`;
+                case "IssueEvent":
+                    return `- Issue ${count} time${count > 1 ? `s` : ""} in ${repoName}`;
+                case "StarEvent":
+                    return `- Starred ${repoName}`;
                 default:
-                    return `Unknown type of event`;
+                    return `- Unknown type of event`;
             }
         });
         // Print the result
