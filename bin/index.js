@@ -24,8 +24,10 @@ program
     .description('Print GitHub activity for the specified username')
     .argument('<username>', 'GitHub username to fetch activity for')
     .action((username) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Fetching GitHub activity for user: ${username}`);
+    console.log(`\nFetching GitHub activity for user: ${username}`);
+    console.log("-".repeat(50));
     url = `https://api.github.com/users/${username}/events`;
+    let result = [];
     try {
         let fetchData = yield fetch(url)
             .then(response => response.json());
@@ -36,15 +38,40 @@ program
                 break;
             }
             if (item.actor.login === username) {
-                // TODO: Add logic based on the item.type
-                (0, dataTypePrint_1.default)(item, item.type);
+                (0, dataTypePrint_1.default)(item, item.type, result);
                 i++;
             }
+        }
+        // Format the result (e.g. multiple commits in one repository will be joined as one)
+        let eventMap = new Map();
+        // Store every type and repository per count
+        result.forEach((action) => {
+            const [eventType, repoName] = action.split(" ");
+            const key = `${eventType} ${repoName}`;
+            eventMap.set(key, (eventMap.get(key) || 0) + 1);
+        });
+        // Reformat the output
+        const reformattedResult = Array.from(eventMap.entries()).map(([[...data], count]) => {
+            const dataArray = data.join("");
+            const [eventType, repoName] = dataArray.split(" ");
+            switch (eventType) {
+                case "PushEvent":
+                    return `Pushed ${count} commit${count > 1 ? `s` : ""} to ${repoName}`;
+                case "PullEvent":
+                    return `Pulled ${count} time${count > 1 ? `s` : ""} from ${repoName}`;
+                default:
+                    return `Unknown type of event`;
+            }
+        });
+        // Print the result
+        for (let line of reformattedResult) {
+            console.log(line);
         }
     }
     catch (e) {
         console.log(`Error fetching data for user ${username}: ${e}`);
     }
+    console.log();
 }));
 // Parse the arguments
 program.parse(process.argv);

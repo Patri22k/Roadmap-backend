@@ -14,9 +14,12 @@ program
     .description('Print GitHub activity for the specified username')
     .argument('<username>', 'GitHub username to fetch activity for')
     .action(async (username) => {
-        console.log(`Fetching GitHub activity for user: ${username}`);
+        console.log(`\nFetching GitHub activity for user: ${username}`);
+        console.log("-".repeat(50));
 
         url = `https://api.github.com/users/${username}/events`;
+
+        let result: string[] = [];
 
         try {
             let fetchData = await fetch(url)
@@ -29,14 +32,46 @@ program
                     break;
                 }
                 if (item.actor.login === username) {
-                    // TODO: Add logic based on the item.type
-                    DataTypePrint(item, item.type);
+                    DataTypePrint(item, item.type, result);
                     i++;
                 }
             }
+
+            // Format the result (e.g. multiple commits in one repository will be joined as one)
+            let eventMap = new Map<string, number>();
+
+            // Store every type and repository per count
+            result.forEach((action) => {
+                const [eventType, repoName] = action.split(" ");
+                const key = `${eventType} ${repoName}`
+                eventMap.set(key, (eventMap.get(key) || 0) + 1);
+            });             
+
+            // Reformat the output
+            const reformattedResult = Array.from(eventMap.entries()).map(([[...data], count]) => {
+                const dataArray = data.join("");
+                const [eventType, repoName] = dataArray.split(" ");
+                
+                switch (eventType) {
+                    case "PushEvent":
+                        return `Pushed ${count} commit${count > 1 ? `s` : ""} to ${repoName}`
+                    case "PullEvent":
+                        return `Pulled ${count} time${count > 1 ? `s` : ""} from ${repoName}`
+                    default:
+                        return `Unknown type of event`
+                }
+                
+            });
+
+            // Print the result
+            for (let line of reformattedResult) {
+                console.log(line);
+            }
+            
         } catch (e) {
             console.log(`Error fetching data for user ${username}: ${e}`);
         }
+        console.log();
     });
 
 // Parse the arguments
