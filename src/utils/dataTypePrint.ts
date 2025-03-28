@@ -10,5 +10,6 @@ export default function DataTypePrint(event: any, eventType: string) {
     } else {
         // TODO: Handle error
         console.log(`Unsupported event`);
+        console.log(event);
     }
 }
