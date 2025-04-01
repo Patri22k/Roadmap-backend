@@ -1,14 +1,62 @@
 [
   {
     "id": 1,
-    "title": "Third title",
-    "content": "Lorem impsum",
+    "title": "Introduction to Go Programming",
+    "content": "Go (or Golang) is a statically typed, compiled language designed for simplicity and efficiency. It excels in concurrency and is widely used for backend development.",
     "author": "admin"
   },
   {
     "id": 2,
-    "title": "Third title",
-    "content": "Lorem impsum",
+    "title": "Understanding TypeScript Generics",
+    "content": "Generics in TypeScript allow developers to create reusable components that work with multiple data types while maintaining type safety.",
+    "author": "admin"
+  },
+  {
+    "id": 3,
+    "title": "Building a CLI Application in Go",
+    "content": "CLI applications are powerful tools. In this article, we explore how to create a simple CLI application using Go and the Cobra library.",
+    "author": "admin"
+  },
+  {
+    "id": 4,
+    "title": "Optimizing React Applications",
+    "content": "Performance optimization in React involves techniques like memoization, lazy loading, and code splitting to enhance the user experience.",
+    "author": "admin"
+  },
+  {
+    "id": 5,
+    "title": "Mastering Next.js for Server-Side Rendering",
+    "content": "Next.js simplifies server-side rendering and static site generation in React applications. Learn how to use it effectively.",
+    "author": "admin"
+  },
+  {
+    "id": 6,
+    "title": "Concurrency in Go: Goroutines and Channels",
+    "content": "Go makes concurrency easy with goroutines and channels. This article explores how to efficiently handle multiple tasks simultaneously.",
+    "author": "admin"
+  },
+  {
+    "id": 7,
+    "title": "Using Tailwind CSS for Modern UI Development",
+    "content": "Tailwind CSS is a utility-first CSS framework that helps developers build modern and responsive designs quickly.",
+    "author": "admin"
+  },
+  {
+    "id": 8,
+    "title": "Creating Reusable Components in React",
+    "content": "Reusable components help maintain a clean and efficient codebase in React. Learn best practices for building them.",
+    "author": "admin"
+  },
+  {
+    "id": 9,
+    "title": "Introduction to WebSockets in JavaScript",
+    "content": "WebSockets enable real-time communication between clients and servers. This article covers how to implement them in JavaScript.",
+    "author": "admin"
+  },
+  {
+    "id": 10,
+    "title": "Best Practices for Secure API Development",
+    "content": "Security is crucial in API development. Learn about authentication, authorization, and data protection techniques.",
     "author": "admin"
   }
 ]

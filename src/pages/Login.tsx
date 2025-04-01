@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../api";
+import * as React from "react";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ const Login = () => {
             } else {
                 window.location.href = "/"; // Redirect to home page
             }
-        } catch (err) {
+        } catch {
             setError("Invalid credentials");
         }
     };

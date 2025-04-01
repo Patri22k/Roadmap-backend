@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchArticles } from "../api";
+import Article from "../components/Article";
 
 const Home = () => {
     interface Article {
@@ -17,13 +18,7 @@ const Home = () => {
         <div>
             <h1>Blog Articles</h1>
             {articles.length > 0 ? (
-                articles.map((article) => (
-                    <div key={article.id}>
-                        <h2>{article.title}</h2>
-                        <p>{article.content}</p>
-                        <hr />
-                    </div>
-                ))
+                articles.map((article) => <Article key={article.id} {...article} />)
             ) : (
                 <p>No articles found.</p>
             )}
