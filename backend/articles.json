@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "title": "Third title",
+    "content": "Lorem impsum",
+    "author": "admin"
+  },
+  {
+    "id": 2,
+    "title": "Fourth title",
+    "content": "Lorem impsum",
+    "author": "admin"
+  }
+]

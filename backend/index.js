@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const fse = require('fs-extra');
 
 const app = express();
 app.use(express.json());
@@ -9,6 +10,7 @@ app.use(cors());
 
 // Secret key for JWT signing and encryption
 const SECRET_KEY = process.env.SECRET_KEY || "admin";
+const ARTICLES_FILE = "articles.json";
 
 // Fake users for database
 const users = [
@@ -16,13 +18,36 @@ const users = [
     { id: 2, username: 'user', password: 'user', role: 'user' },
 ];
 
-// Fake articles array (temporary storage)
-let articles = [
-    { id: 1, title: "First Article", content: "Hello world!", author: "admin" },
-];
+// Read articles from JSON file
+// Be aware: reading an empty JSON will lead to an error
+async function getArticles() {
+    try {
+        return await fse.readJson(ARTICLES_FILE);
+    } catch (error) {
+        return [];
+    }
+}
+
+// Reset articles IDs
+async function resetArticlesIds(filteredArticle) {
+    try {
+        return filteredArticle.map((article, index) => ({ ...article, id: index + 1 }));
+    } catch (error) {
+        console.error("Error resetting article IDs:", error);
+    }
+}
+
+// Save articles to JSON file
+async function saveArticles(articles) {
+    try {
+        await fse.writeJson(ARTICLES_FILE, articles, { spaces: 2 });
+    } catch (error) {
+        console.error("Error saving articles:", error);
+    }
+}
 
 // Login route (returns JWT token)
-app.use('/login', (req, res) => {
+app.post("/login", (req, res) => {
     const { username, password } = req.body;
     const user = users.find(u => u.username === username && u.password === password);
     
@@ -32,7 +57,7 @@ app.use('/login', (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
+    return res.json({ token });
 });
 
 // Middleware to authenticate JWT token
@@ -56,41 +81,68 @@ const authorizeAdmin = (req, res, next) => {
 };
 
 // Public route: everyone can read article
-app.get("/articles", (req, res) => {
-    res.json(articles);
+app.get("/articles", async (req, res) => {
+    const articles = await getArticles();
+    return res.json(articles);
 });
 
 // Admin only: create new article
-app.put('/articles', authenticate, authorizeAdmin, (req, res) => {
+app.put('/articles', authenticate, authorizeAdmin, async (req, res) => {
     const { title, content, author } = req.body;
-    const newArticle = { id: articles.length + 1, title, content, author }; // Temporary ID generation
+
+    let articles = await getArticles();
+    const newArticle = { id: articles.length + 1, title, content, author };
     articles.push(newArticle);
-    res.status(201).json(newArticle);
+
+    await saveArticles(articles);
+    return res.status(201).json(newArticle);
 });
 
 // Admin only: modify existing article
-app.post('/articles/:id', authenticate, authorizeAdmin, (req, res) => {
-    const article = articles.find((a) => a.id === parseInt(req.params.id));
+app.post('/articles/:id', authenticate, authorizeAdmin, async (req, res) => {
+    let articles = await getArticles();
+    articles = Array.from(articles);
+    const articleIndex = articles.findIndex((a) => a.id === parseInt(req.params.id));
 
-    if (!article) {
-        res.status(404).json({ message: "Article you want to modified doesn't exist" });
+    if (articleIndex === -1) {
+        return res.status(404).json({ message: "Article you want to modified doesn't exist" });
+
     }
 
-    article.title = req.body.title || article.title;
-    article.content = req.body.content || article.content;
+    articles[articleIndex] = { ...articles[articleIndex], ...req.body };
+    await saveArticles(articles);
 
-    res.status(200).json({ message: "Article updated" });
+    return res.status(200).json({ message: "Article updated" });
 });
 
 // Admin only: delete article
-app.delete("/articles/:id", authenticate, authorizeAdmin, (req, res) => {
-    articles = articles.filter((a) => a.id !== req.params.id);
-    res.json({ message: "Article deleted" });
+app.delete("/articles/:id", authenticate, authorizeAdmin, async (req, res) => {
+    try {
+        let articles = await getArticles();
+        articles = Array.from(articles);
+        const filteredArticle = articles.filter((a) => a.id !== parseInt(req.params.id));
+
+        if (articles.length === filteredArticle.length) {
+            return res.status(404).json({ message: "Article you want to delete doesn't exist" });
+        }
+
+        let updatedArticles = filteredArticle;
+        if (filteredArticle.length !== 0) {
+            updatedArticles = await resetArticlesIds(filteredArticle);
+        }
+
+        await saveArticles(updatedArticles);
+
+        return res.json({ message: "Article deleted" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 // Protected route example
 app.get('/me', authenticate, (req, res) => {
-    res.json({ message: "Hello, " + req.user.username });
+    return res.json({ message: "Hello, " + req.user.username });
 });
 
 // Start the server
