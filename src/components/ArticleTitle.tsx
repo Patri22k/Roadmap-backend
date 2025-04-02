@@ -5,7 +5,7 @@ interface ArticleProps {
 
 const Article = (props: ArticleProps) => {
     return (
-        <div key={props.id} className="">
+        <div key={props.id}>
             <h2>{props.title}</h2>
         </div>
     )

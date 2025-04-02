@@ -16,19 +16,16 @@ export interface Article {
 }
 
 export const fetchArticles = async (): Promise<Article[]> => {
-    const response = await axios.get(`${API_URL}/articles`);
+    const response = await axios.get(`${API_URL}/home`);
     return response.data;
 };
+
+export const fetchArticleByID = async (id: number): Promise<Article[]> => {
+    const response = await fetchArticles();
+    return response.filter((article) => article.id === id);
+}
 
 export const login = async (username: string, password: string): Promise<{ token: string }> => {
     const response = await axios.post(`${API_URL}/login`, { username, password });
-    return response.data;
-};
-
-export const getMe = async (token: string): Promise<User> => {
-    const response = await axios.get(`${API_URL}/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(response.data);
     return response.data;
 };
