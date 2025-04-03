@@ -1,23 +1,36 @@
 import {Link, useParams} from "react-router-dom";
 import * as React from "react";
 import {updateArticle} from "../api.ts";
+import ConvertDate from "../utils/ConvertDate.tsx";
 
 const EditArticle = () => {
     const id = useParams<{ id: string }>();
     const articleID = id.id ? parseInt(id.id) : NaN;
 
     const [title, setTitle] = React.useState("");
+    const [date, setDate] = React.useState("");
+    const [dateError, setDateError] = React.useState("");
     const [content, setContent] = React.useState("");
     const [message, setMessage] = React.useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Convert date from DD:MM:YYYY to YYYY-MM-DD (JSON standard)
+        const formattedDate = ConvertDate(date);
+
+        if (formattedDate === "Invalid date format. Expected DD.MM.YYYY" || formattedDate === "Invalid date parts. Use format: DD.MM.YYYY") {
+            setDateError(formattedDate);
+            return;
+        }
+
         try {
-            await updateArticle({ id: articleID, title, content });
+            await updateArticle({ id: articleID, title, date: formattedDate, content });
 
             setMessage("Article updated successfully!");
             setTitle("");
+            setDate("");
+            setDateError("");
             setContent("");
         }  catch (error) {
             setMessage("Error: " + error);
@@ -32,13 +45,20 @@ const EditArticle = () => {
                     <input
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full mt-10 h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
+                        className="w-full mt-10 mb-4 h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
                         type="text" placeholder="Article title"
                         required/>
+                    <input
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
+                        type="text" placeholder="Article title"
+                        required/>
+                    {dateError && <p className="text-red-500 self-start">{dateError}</p>}
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="w-full mt-10 h-30 border-2 border-gray-300 rounded-md px-4 pt-2 placeholder:text-black"
+                        className="w-full mt-6 h-35 border-2 border-gray-300 rounded-md px-4 pt-2 placeholder:text-black"
                         placeholder="Content"
                         required/>
                 </div>
