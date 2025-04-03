@@ -62,7 +62,7 @@ The backend server exposes the following endpoints:
 - `GET /me` - logs with the token
 - `GET /admin` - admin page
 - `GET /home` - home page
-- `PUT /'new` - create a new article (admin only)
+- `PUT /new` - create a new article (admin only)
 - `POST /edit/:id` - edit an article (admin only)
 - `DELETE /admin` - delete an article via button (admin only)
 
