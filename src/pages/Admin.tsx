@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { fetchArticles } from "../api.ts";
-import EditButton from "../components/EditButton.tsx";
-import DeleteButton from "../components/DeleteButton.tsx";
-import { useNavigate } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {deleteArticle, fetchArticles} from "../api.ts";
+import {Link, useNavigate} from "react-router-dom";
+import AddButton from "../components/AddButton.tsx";
+import ArticleTitle from "../components/ArticleTitle.tsx";
 
 const Admin = () => {
     interface Article {
@@ -32,22 +32,33 @@ const Admin = () => {
     }, [navigate]);
 
     return (
-        <div>
-            <h1>Admin Page</h1>
-            <h2>Articles</h2>
-            {articles.length > 0 ? (
-                articles.map((a) => (
-                    <div key={a.id}>
-                        <p>{a.title}</p>
-                        <p>{a.content}</p>
-                        <EditButton />
-                        <DeleteButton />
-                    </div>
-                ))
-            ) : (
-                <p>No article found</p>
-            )}
-        </div>
+        <>
+            <div className="flex items-center justify-between w-9/12 mx-auto py-4">
+                <h1 className="py-4">Personal Blog</h1>
+                <AddButton/>
+            </div>
+            <div className="w-9/12 mx-auto pt-4">
+                {articles.length > 0 ? (
+                    articles.map((article) => (
+                        <div key={article.id} className="flex items-center justify-between w-full">
+                            <Link key={article.id} to={`/article/${article.id}`} className="block py-3" >
+                                <ArticleTitle id={article.id} title={article.title}/>
+                            </Link>
+                            <div className="flex items-center justify-between w-1/6">
+                                <Link to={`/edit/${article.id}`} className="font-semibold text-gray-400 text-lg">
+                                    Edit
+                                </Link>
+                                <button onClick={() => deleteArticle(article.id)} className="font-semibold text-gray-400 text-lg">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No article found</p>
+                )}
+            </div>
+        </>
     );
 };
 

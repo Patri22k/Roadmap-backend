@@ -28,9 +28,8 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center min-h-screen">
             <h1>Login</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
             <form onSubmit={handleLogin} className="flex flex-col items-center mx-auto w-9/12 pt-8 pb-4">
                 <input
                     className="w-full mt-10 mb-4 h-10 border-2 border-gray-300 rounded-md px-4"
@@ -47,8 +46,11 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button type="submit" className="border-2 w-fit border-gray-300 rounded-md px-6 p-3">Login</button>
+                {error && <p className="text-red-500 mt-4">{error}</p>}
             </form>
-            <Link className="border-2 w-fit border-gray-300 rounded-md px-6 py-3" to="/">Back to Home</Link>
+            <div className="mt-auto mb-16">
+                <Link className="border-2 w-fit border-gray-300 rounded-md px-6 py-3" to="/">Back to Home</Link>
+            </div>
         </div>
     );
 };
