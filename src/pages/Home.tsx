@@ -7,6 +7,7 @@ const Home = () => {
     interface Article {
         id: number;
         title: string;
+        date: string;
     }
 
     const [articles, setArticles] = useState<Article[]>([]);
@@ -24,8 +25,9 @@ const Home = () => {
             <div className="w-9/12 mx-auto">
             {articles.length > 0 ? (
                 articles.map((article) => (
-                    <Link className="block py-3" key={article.id} to={`/article/${article.id}`}>
+                    <Link className="flex justify-between items-center py-3" key={article.id} to={`/article/${article.id}`}>
                         <ArticleTitle id={article.id} title={article.title}/>
+                        <p className="text-gray-500 text-lg">{new Date(article.date).toLocaleDateString()}</p>
                     </Link>
                     ))
             ) : (

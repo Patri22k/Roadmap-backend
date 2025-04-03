@@ -49,10 +49,10 @@ app.get("/home", async (req, res) => {
 
 // Admin only: create new article
 app.put('/new', authenticate, authorizeAdmin, async (req, res) => {
-    const {title, content, author} = req.body;
+    const {date, title, content, author} = req.body;
 
     let articles = await getArticles();
-    const newArticle = {id: articles.length + 1, title, content, author};
+    const newArticle = {id: articles.length + 1, date, title, content, author};
     articles.push(newArticle);
 
     await saveArticles(articles);

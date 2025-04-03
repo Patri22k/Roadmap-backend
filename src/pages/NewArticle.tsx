@@ -2,19 +2,32 @@ import {useState} from "react";
 import * as React from "react";
 import {addArticle} from "../api.ts";
 import {Link} from "react-router-dom";
+import convertDate from "../utils/ConvertDate.tsx";
 
 const NewArticle = () => {
     const [title, setTitle] = useState("");
+    const [date, setDate] = useState("");
+    const [dateError, setDateError] = useState("");
     const [content, setContent] = useState("");
     const [message, setMessage] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Convert date from DD:MM:YYYY to YYYY-MM-DD (JSON standard)
+        const formattedDate = convertDate(date);
+
+        // Check if the date conversion was successful
+        if (formattedDate === "Invalid date format. Expected DD.MM.YYYY" || formattedDate === "Invalid date parts. Use format: DD.MM.YYYY") {
+            setDateError(formattedDate);
+            return;
+        }
+
         try {
-            await addArticle({ title, content, author: "admin" });
+            await addArticle({ title, date: formattedDate, content, author: "admin" });
 
             setMessage("Article published successfully!");
+            setDate("");
             setTitle("");
             setContent("");
         } catch (error) {
@@ -31,13 +44,20 @@ const NewArticle = () => {
                     <input
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full mt-10 h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
+                        className="w-full mt-10 mb-4 h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
                         type="text" placeholder="Article title"
                         required/>
+                    <input
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full h-10 border-2 border-gray-300 rounded-md px-4 placeholder:text-black"
+                        type="text" placeholder="Publishing date"
+                        required/>
+                    {dateError && <p className="text-red-500 self-start">{dateError}</p>}
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
-                        className="w-full mt-10 h-30 border-2 border-gray-300 rounded-md px-4 pt-2 placeholder:text-black"
+                        className="w-full mt-6 h-35 border-2 border-gray-300 rounded-md px-4 pt-2 placeholder:text-black"
                         placeholder="Content"
                         required/>
                 </div>
