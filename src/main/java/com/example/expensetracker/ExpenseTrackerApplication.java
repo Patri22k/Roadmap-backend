@@ -61,7 +61,7 @@ public class ExpenseTrackerApplication {
                         mapper.writeValue(jsonFile, newExpense);
                     }
 
-                    System.out.println("Expense added successfully (ID: " + addExpense.getId() + ")");
+                    System.out.println("# Expense added successfully (ID: " + addExpense.getId() + ")");
                 } catch (Exception e) {
                     System.out.println("Error converting to JSON: " + e.getMessage());
                 }
@@ -107,7 +107,7 @@ public class ExpenseTrackerApplication {
                         mapperDelete.writeValue(deleteFromFile, updatedExpenses);
                     }
 
-                    System.out.println("Expense deleted successfully");
+                    System.out.println("# Expense deleted successfully");
                 } catch (Exception e) {
                     System.out.println("Error with JSON file: " + e.getMessage());
                 }
@@ -169,7 +169,7 @@ public class ExpenseTrackerApplication {
                                     mapToInt(expense -> Integer.parseInt(expense.getAmount())).
                                     sum();
 
-                            System.out.println("Total expenses: " + sum + "€");
+                            System.out.println("# Total expenses: " + sum + "€");
                         }
                         // Summary of expenses per specific month
                         else if (args.length == 3 && args[1].equals("--month")) {
@@ -202,7 +202,7 @@ public class ExpenseTrackerApplication {
                                     .mapToInt(expense -> Integer.parseInt(expense.getAmount()))
                                     .sum();
 
-                            System.out.println("Total expenses for " + monthName + ": " + monthSum);
+                            System.out.println("# Total expenses for " + monthName + ": " + monthSum);
                         }
                         // Summary of expenses per specific year
                         else if (args.length == 3 && args[1].equals("--year")) {
@@ -224,7 +224,7 @@ public class ExpenseTrackerApplication {
                                     .mapToInt(expense -> Integer.parseInt(expense.getAmount()))
                                     .sum();
 
-                            System.out.println("Total expenses in " + year + ": " + yearSum);
+                            System.out.println("# Total expenses in " + year + ": " + yearSum);
                         }
                         else {
                             help.print();
