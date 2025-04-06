@@ -1,7 +1,7 @@
 package com.example.expensetracker;
 
-import com.example.expensetracker.command.Expense;
-import com.example.expensetracker.command.PrintHelp;
+import com.example.expensetracker.utils.ExpenseUtils;
+import com.example.expensetracker.utils.PrintHelp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -79,15 +79,12 @@ public class ExpenseTrackerApplication {
                     File deleteFromFile = new File("expenses.json");
 
                     if (deleteFromFile.exists() && deleteFromFile.length() > 0) {
-                        // Read the existing JSON file
-                        // TODO: Create util fuctions
-                        Expense[] existingExpenses = mapperDelete.readValue(deleteFromFile, Expense[].class);
-
-                        // Convert the array to a List for easier manipulation
-                        List<Expense> updatedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+                        // Read the existing JSON file and
+                        // convert the array to a List for easier manipulation
+                        List<Expense> expenseList = ExpenseUtils.readExpensesFromFile(mapperDelete, deleteFromFile);
 
                         // Error handling: if ID doesn't exist
-                        boolean existID = updatedExpenses.stream()
+                        boolean existID = expenseList.stream()
                                         .anyMatch(expense -> expense.getId().equals(deleteID));
                         if (!existID) {
                             System.out.println("Expense with ID: " + deleteID + " not found");
@@ -95,17 +92,17 @@ public class ExpenseTrackerApplication {
                         }
 
                         // Find and remove the expense with the specified ID
-                        updatedExpenses.stream().filter(expense -> expense.getId().equals(deleteID))
+                        expenseList.stream().filter(expense -> expense.getId().equals(deleteID))
                                 .findFirst()
-                                .ifPresent(updatedExpenses::remove);
+                                .ifPresent(expenseList::remove);
 
                         // Reset the IDs after deletion
-                        for (int i = 0; i < updatedExpenses.size(); i++) {
-                            updatedExpenses.get(i).setId(String.valueOf(i + 1));
+                        for (int i = 0; i < expenseList.size(); i++) {
+                            expenseList.get(i).setId(String.valueOf(i + 1));
                         }
 
                         // Write back to the JSON file
-                        mapperDelete.writeValue(deleteFromFile, updatedExpenses);
+                        mapperDelete.writeValue(deleteFromFile, expenseList);
                     }
 
                     System.out.println("# Expense deleted successfully");
@@ -130,23 +127,23 @@ public class ExpenseTrackerApplication {
 
                     try {
                         if (updateFromFile.exists() && updateFromFile.length() > 0) {
-                            Expense[] existingExpenses = mapperUpdate.readValue(updateFromFile, Expense[].class);
-                            List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+                            // Read expenses from JSON file and convert them to array
+                            List<Expense> expenseList = ExpenseUtils.readExpensesFromFile(mapperUpdate, updateFromFile);
 
                             // Check if ID is correct and in range
-                            boolean correctID = convertedExpenses.stream()
+                            boolean correctID = expenseList.stream()
                                             .anyMatch(expense -> expense.getId().equals(id));
                             if (!correctID) {
                                 System.out.println("Expense with ID: " + id + " not found");
                                 return;
                             }
 
-                            convertedExpenses.stream()
+                            expenseList.stream()
                                     .filter(expense -> expense.getId().equals(id))
                                     .forEach(expense -> expense.setAmount(newAmount));
 
                             // Write back to JSON file
-                            mapperUpdate.writeValue(updateFromFile, convertedExpenses);
+                            mapperUpdate.writeValue(updateFromFile, expenseList);
 
                             System.out.println("# Expense updated successfully");
                         } else {
@@ -173,14 +170,12 @@ public class ExpenseTrackerApplication {
 
                 try {
                     if (listFile.exists() && listFile.length() > 0) {
-                        // Read expenses from JSON file
-                        Expense[] expenses = mapperList.readValue(listFile, Expense[].class);
-
-                        List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(expenses));
+                        // Read expenses from JSON file and convert them to array
+                        List<Expense> expenseList = ExpenseUtils.readExpensesFromFile(mapperList, listFile);
 
                         // Print the output
                         System.out.printf("# %-4s %-15s %-15s %-6s%n", "ID", "Date", "Description", "Amount");
-                        convertedExpenses.forEach(expense ->
+                        expenseList.forEach(expense ->
                                 System.out.printf("# %-4s %-15s %-15s %-6s \n", expense.getId(), expense.getDate(), expense.getDescription(), expense.getAmount() + "€")
                         );
                     } else {

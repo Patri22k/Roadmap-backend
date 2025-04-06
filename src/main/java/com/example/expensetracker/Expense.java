@@ -1,4 +1,4 @@
-package com.example.expensetracker.command;
+package com.example.expensetracker;
 
 public class Expense {
     private String id;

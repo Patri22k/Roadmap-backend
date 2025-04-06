@@ -1,4 +1,4 @@
-package com.example.expensetracker.command;
+package com.example.expensetracker.utils;
 
 import org.springframework.stereotype.Component;
 
