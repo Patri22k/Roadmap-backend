@@ -9,6 +9,7 @@ project.
 ## Features
 - add an expense with a description and amount
 - delete an expense via ID
+- update an expense amount via ID
 - view all expenses
 - view a summary of all expenses
 - view a summary of expenses for a specific month/year

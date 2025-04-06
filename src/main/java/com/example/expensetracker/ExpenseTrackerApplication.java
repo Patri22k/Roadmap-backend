@@ -113,6 +113,40 @@ public class ExpenseTrackerApplication {
                 }
 
                 break;
+            case "update":
+                // TODO: Add error handling for correct amount type (only positive number), check if id exists,...)
+                if (args.length == 5 && args[1].contains("--id") && args[3].contains("--amount")) {
+                    String id = args[2];
+                    String newAmount = args[4];
+
+                    ObjectMapper mapperUpdate = new ObjectMapper();
+                    File updateFromFile = new File("expenses.json");
+
+                    try {
+                        if (updateFromFile.exists() && updateFromFile.length() > 0) {
+                            Expense[] existingExpenses = mapperUpdate.readValue(updateFromFile, Expense[].class);
+                            List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+
+                            convertedExpenses.stream()
+                                    .filter(expense -> expense.getId().equals(id))
+                                    .forEach(expense -> expense.setAmount(newAmount));
+
+                            // Write back to JSON file
+                            mapperUpdate.writeValue(updateFromFile, convertedExpenses);
+
+                            System.out.println("# Expense updated successfully");
+                        } else {
+                            System.out.println("Expense with ID: " + id + " not found");
+                            return;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error with JSON: " + e.getMessage());
+                    }
+
+                } else {
+                    help.print();
+                }
+                break;
             case "list":
                 if (args.length != 1) {
                     help.print();

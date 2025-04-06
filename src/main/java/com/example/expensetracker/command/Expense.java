@@ -19,6 +19,8 @@ public class Expense {
         this.id = id;
     }
 
+    public void setAmount(String amount) { this.amount = amount; }
+
     public String getId() {
         return id;
     }
