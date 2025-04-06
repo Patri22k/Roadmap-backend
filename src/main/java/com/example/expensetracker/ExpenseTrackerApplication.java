@@ -1,12 +1,15 @@
 package com.example.expensetracker;
 
-import com.example.expensetracker.command.AddExpense;
+import com.example.expensetracker.command.Expense;
 import com.example.expensetracker.command.PrintHelp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 public class ExpenseTrackerApplication {
@@ -18,38 +21,182 @@ public class ExpenseTrackerApplication {
         }
 
         String command = args[0];
+        PrintHelp help = new PrintHelp();
 
-        // TODO: Add error handling for invalid commands
         switch (command) {
             case "--help":
             case "-h":
-                PrintHelp help = new PrintHelp();
                 help.print();
                 break;
             case "add":
-                // TODO: Implement AddExpense command
-                AddExpense addExpense = new AddExpense(LocalDate.now().toString(), args[2], args[4]);
+                // TODO: Error handling for incorrect or missing arguments
+                Expense addExpense = new Expense("1", LocalDate.now().toString(), args[2], args[4]);
                 ObjectMapper mapper = new ObjectMapper();
 
                 File jsonFile = new File("expenses.json");
 
                 try {
-                    if (jsonFile.exists()) {
-                        // TODO: Implement logic to append to existing JSON file
-                        return;
+                    if (jsonFile.exists() && jsonFile.length() > 0) {
+                        // Read the existing JSON file
+                        Expense[] existingExpenses = mapper.readValue(jsonFile, Expense[].class);
+
+                        // Converts the array to more flexible List interface with ArrayList as the implementation
+                        List<Expense> updatedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+
+                        // Set the ID for the new expense
+                        String correctID = String.valueOf(updatedExpenses.toArray().length + 1);
+                        addExpense.setId(correctID);
+
+                        // Add the new expense to the list
+                        updatedExpenses.add(addExpense);
+
+                        // Write the updated list back to the JSON file
+                        mapper.writeValue(jsonFile, updatedExpenses);
                     } else {
                         // Create a new JSON file and write the expense to it
-                        mapper.writeValue(jsonFile, addExpense);
+                        Expense[] newExpense = new Expense[]{addExpense};
+                        mapper.writeValue(jsonFile, newExpense);
                     }
+
+                    System.out.println("Expense added successfully (ID: " + addExpense.getId() + ")");
                 } catch (Exception e) {
                     System.out.println("Error converting to JSON: " + e.getMessage());
                 }
                 break;
             case "delete":
-                // TODO: Implement DeleteExpense command
+                // TODO: Error handling for incorrect or missing arguments
+                String deleteID = args[2];
+
+                // Read the existing JSON file
+                try {
+                    ObjectMapper mapperDelete = new ObjectMapper();
+                    File deleteFromFile = new File("expenses.json");
+
+                    if (deleteFromFile.exists() && deleteFromFile.length() > 0) {
+                        // Read the existing JSON file
+                        Expense[] existingExpenses = mapperDelete.readValue(deleteFromFile, Expense[].class);
+
+                        // Convert the array to a List for easier manipulation
+                        List<Expense> updatedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+
+                        // Find and remove the expense with the specified ID
+                        updatedExpenses.stream().filter(expense -> expense.getId().equals(deleteID))
+                                .findFirst()
+                                .ifPresent(updatedExpenses::remove);
+
+                        // Reset the IDs after deletion
+                        for (int i = 0; i < updatedExpenses.size(); i++) {
+                            updatedExpenses.get(i).setId(String.valueOf(i + 1));
+                        }
+
+                        // Write back to the JSON file
+                        mapperDelete.writeValue(deleteFromFile, updatedExpenses);
+                    }
+
+                    System.out.println("Expense deleted successfully");
+                } catch (Exception e) {
+                    System.out.println("Error with JSON file: " + e.getMessage());
+                }
+
                 break;
             case "list":
-                // TODO: Implement ListExpenses command
+                // TODO: Error handling for incorrect or missing arguments
+                ObjectMapper mapperList = new ObjectMapper();
+
+                File listFile = new File("expenses.json");
+
+                try {
+                    if (listFile.exists() && listFile.length() > 0) {
+                        // Read expenses from JSON file
+                        Expense[] expenses = mapperList.readValue(listFile, Expense[].class);
+
+                        List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(expenses));
+
+                        // Print the output
+                        System.out.printf("# %-4s %-15s %-15s %-6s%n", "ID", "Date", "Description", "Amount");
+                        convertedExpenses.forEach(expense ->
+                                System.out.printf("# %-4s %-15s %-15s %-6s \n", expense.getId(), expense.getDate(), expense.getDescription(), expense.getAmount() + "€")
+                        );
+                    } else {
+                        System.out.println("No expenses found");
+                        return;
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error with JSON file: " + e.getMessage());
+                }
+                break;
+            case "summary":
+                // TODO: Error handling for summary of all expenses and for specific month/year
+                ObjectMapper mapperSummary = new ObjectMapper();
+
+                File summaryFile = new File("expenses.json");
+
+                // List of month names in English
+                List<String> monthNames = Arrays.asList(
+                        "January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                );
+
+                try {
+                    if (summaryFile.exists() && summaryFile.length() > 0) {
+                        // Summary of all expenses
+                        if (args.length == 1) {
+                            // Read all expenses from JSON file
+                            Expense[] allExpenses = mapperSummary.readValue(summaryFile, Expense[].class);
+                            List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(allExpenses));
+
+                            // Iterate and calculate sum
+                            int sum = convertedExpenses.
+                                    stream().
+                                    mapToInt(expense -> Integer.parseInt(expense.getAmount())).
+                                    sum();
+
+                            System.out.println("Total expenses: " + sum + "€");
+                        }
+                        // Summary of expenses per specific month
+                        else if (args.length == 3 && args[1].equals("--month")) {
+                           String argMonth = args[2];
+
+                           String month = argMonth.length() == 1 ? "0" + argMonth : argMonth;
+
+                           int monthIndex = Integer.parseInt(argMonth) - 1;
+                           String monthName = monthNames.get(monthIndex);
+
+                            // Read all expenses from JSON file
+                            Expense[] allExpenses = mapperSummary.readValue(summaryFile, Expense[].class);
+                            List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(allExpenses));
+
+                            int monthSum = convertedExpenses.stream()
+                                    .filter(expense -> expense.getDate().substring(5, 7).equals(month))
+                                    .mapToInt(expense -> Integer.parseInt(expense.getAmount()))
+                                    .sum();
+
+                            System.out.println("Total expenses for " + monthName + ": " + monthSum);
+                        }
+                        // Summary of expenses per specific year
+                        else if (args.length == 3 && args[1].equals("--year")) {
+                            String year = args[2];
+
+                            // Read all expenses from JSON file
+                            Expense[] allExpenses = mapperSummary.readValue(summaryFile, Expense[].class);
+                            List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(allExpenses));
+
+                            int yearSum = convertedExpenses.stream()
+                                    .filter(expense -> expense.getDate().substring(0,4).equals(year))
+                                    .mapToInt(expense -> Integer.parseInt(expense.getAmount()))
+                                    .sum();
+
+                            System.out.println("Total expenses in " + year + ": " + yearSum);
+                        }
+                        else {
+                            help.print();
+                        }
+
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error with JSON file: " + e.getMessage());
+                }
                 break;
         }
     }
