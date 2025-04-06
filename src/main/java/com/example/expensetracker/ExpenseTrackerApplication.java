@@ -29,7 +29,10 @@ public class ExpenseTrackerApplication {
                 help.print();
                 break;
             case "add":
-                // TODO: Error handling for incorrect or missing arguments
+                if (args.length != 5) {
+                    help.print();
+                    return;
+                }
                 Expense addExpense = new Expense("1", LocalDate.now().toString(), args[2], args[4]);
                 ObjectMapper mapper = new ObjectMapper();
 
@@ -64,7 +67,10 @@ public class ExpenseTrackerApplication {
                 }
                 break;
             case "delete":
-                // TODO: Error handling for incorrect or missing arguments
+                if (args.length != 3 || !args[1].contains("--id")) {
+                    help.print();
+                    return;
+                }
                 String deleteID = args[2];
 
                 // Read the existing JSON file
@@ -78,6 +84,14 @@ public class ExpenseTrackerApplication {
 
                         // Convert the array to a List for easier manipulation
                         List<Expense> updatedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+
+                        // Error handling: if ID doesn't exist
+                        boolean existID = updatedExpenses.stream()
+                                        .anyMatch(expense -> expense.getId().equals(deleteID));
+                        if (!existID) {
+                            System.out.println("Expense with ID: " + deleteID + " not found");
+                            return;
+                        }
 
                         // Find and remove the expense with the specified ID
                         updatedExpenses.stream().filter(expense -> expense.getId().equals(deleteID))
@@ -100,7 +114,11 @@ public class ExpenseTrackerApplication {
 
                 break;
             case "list":
-                // TODO: Error handling for incorrect or missing arguments
+                if (args.length != 1) {
+                    help.print();
+                    return;
+                }
+
                 ObjectMapper mapperList = new ObjectMapper();
 
                 File listFile = new File("expenses.json");
@@ -127,7 +145,6 @@ public class ExpenseTrackerApplication {
                 }
                 break;
             case "summary":
-                // TODO: Error handling for summary of all expenses and for specific month/year
                 ObjectMapper mapperSummary = new ObjectMapper();
 
                 File summaryFile = new File("expenses.json");
@@ -158,6 +175,19 @@ public class ExpenseTrackerApplication {
                         else if (args.length == 3 && args[1].equals("--month")) {
                            String argMonth = args[2];
 
+                           // Check for correct type (only numbers)
+                            String monthRegex = "\\b[0-9]+\\b";
+                            if (!argMonth.matches(monthRegex)) {
+                                System.out.println("Invalid month format");
+                                return;
+                            }
+
+                           // Check for correct month
+                            if (Integer.parseInt(argMonth) < 0 || Integer.parseInt(argMonth) > 12) {
+                                System.out.println("Invalid month");
+                                return;
+                            }
+
                            String month = argMonth.length() == 1 ? "0" + argMonth : argMonth;
 
                            int monthIndex = Integer.parseInt(argMonth) - 1;
@@ -177,6 +207,13 @@ public class ExpenseTrackerApplication {
                         // Summary of expenses per specific year
                         else if (args.length == 3 && args[1].equals("--year")) {
                             String year = args[2];
+
+                            // Check for correct year (only numbers, no negative numbers)
+                            String yearRegex = "\\b[0-9]+\\b";
+                            if (!year.matches(yearRegex)) {
+                                System.out.println("Invalid year format");
+                                return;
+                            }
 
                             // Read all expenses from JSON file
                             Expense[] allExpenses = mapperSummary.readValue(summaryFile, Expense[].class);
