@@ -80,6 +80,7 @@ public class ExpenseTrackerApplication {
 
                     if (deleteFromFile.exists() && deleteFromFile.length() > 0) {
                         // Read the existing JSON file
+                        // TODO: Create util fuctions
                         Expense[] existingExpenses = mapperDelete.readValue(deleteFromFile, Expense[].class);
 
                         // Convert the array to a List for easier manipulation
@@ -114,10 +115,15 @@ public class ExpenseTrackerApplication {
 
                 break;
             case "update":
-                // TODO: Add error handling for correct amount type (only positive number), check if id exists,...)
                 if (args.length == 5 && args[1].contains("--id") && args[3].contains("--amount")) {
                     String id = args[2];
+
                     String newAmount = args[4];
+                    String newAmountRegex = "\\b[0-9]+\\b";
+                    if (!newAmount.matches(newAmountRegex)) {
+                        System.out.println("Invalid amount format");
+                        return;
+                    }
 
                     ObjectMapper mapperUpdate = new ObjectMapper();
                     File updateFromFile = new File("expenses.json");
@@ -126,6 +132,14 @@ public class ExpenseTrackerApplication {
                         if (updateFromFile.exists() && updateFromFile.length() > 0) {
                             Expense[] existingExpenses = mapperUpdate.readValue(updateFromFile, Expense[].class);
                             List<Expense> convertedExpenses = new ArrayList<>(Arrays.asList(existingExpenses));
+
+                            // Check if ID is correct and in range
+                            boolean correctID = convertedExpenses.stream()
+                                            .anyMatch(expense -> expense.getId().equals(id));
+                            if (!correctID) {
+                                System.out.println("Expense with ID: " + id + " not found");
+                                return;
+                            }
 
                             convertedExpenses.stream()
                                     .filter(expense -> expense.getId().equals(id))

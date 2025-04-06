@@ -41,11 +41,14 @@ expense-tracker list
 expense-tracker summary
 # Total expenses: 17€
 
+ expense-tracker update --id 1 --amount 20
+# Expense updated successfully
+
 expense-tracker summary --month 4
-# Total expenses for April: 17
+# Total expenses for April: 25
 
 expense-tracker summary --month 04
-# Total expenses for April: 17
+# Total expenses for April: 25
 
 expense-tracker delete --id 1
 # Expense deleted successfully
