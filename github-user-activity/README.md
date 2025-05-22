@@ -13,6 +13,7 @@ To succesfully run the project, ensure you have the following installed:
 ## Installation
 To install the CLI globally, run:
 ```sh
+npm i
 npm run release
 ```
 This will build the project and install it globally, allowing you to use `github-activity` from anywhere in your terminal.
