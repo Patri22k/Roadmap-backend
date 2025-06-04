@@ -1,3 +1,3 @@
 # Roadmap Backend Monorepo
 
-This is the backend monorepo for the Roadmap project.
+This is the backend monorepo for the Roadmap projects.
