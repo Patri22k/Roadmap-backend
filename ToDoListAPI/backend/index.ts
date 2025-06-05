@@ -1,6 +1,6 @@
 import express from 'express';
 import {PrismaClient} from './generated/prisma';
-import user from "./routes/user";
+import { userRouter } from "./routes/user";
 
 const app = express();
 app.use(express.json());
@@ -25,11 +25,7 @@ main()
         await prisma.$disconnect()
     })
 
-app.get("/", (_req: any, res: any) => {
-    res.send("Hello World!");
-})
-
-app.use(user);
+app.use('/api', userRouter);
 
 app.listen(port, () => {
     console.log("Server is running on port " + port);
