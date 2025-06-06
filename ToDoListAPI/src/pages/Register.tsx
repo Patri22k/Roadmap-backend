@@ -2,6 +2,7 @@ import AuthLayout from "../layouts/AuthLayout.tsx";
 import {useState} from "react";
 import * as React from "react";
 import {registerUser} from "../api/auth.ts";
+import CustomLink from "../components/Link.tsx";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,12 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await registerUser(name, email, password);
+
+    // Reset errors
+    setNameError(null);
+    setEmailError(null);
+    setPasswordError(null);
+    setError(null);
 
     if (!response.success) {
       if (Array.isArray(response.error.errors)) {
@@ -33,10 +40,7 @@ const Register = () => {
         setError(response.error.message);
       }
     } else {
-      setNameError(null);
-      setEmailError(null);
-      setPasswordError(null);
-      setError(null);
+      // TODO: Handle successful registration, e.g., redirect to login page or show success message
     }
   };
 
@@ -62,6 +66,7 @@ const Register = () => {
           </button>
           {error && <p className="text-red-700">{error}</p>}
         </form>
+        <CustomLink text="Go Back to Menu" to="/" />
       </AuthLayout.Main>
     </AuthLayout>
   );

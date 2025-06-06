@@ -31,7 +31,7 @@ main()
         await prisma.$disconnect()
     })
 
-app.use('/api', userRouter);
+app.use('/auth', userRouter);
 
 app.listen(port, () => {
     console.log("Server is running on port " + port);
