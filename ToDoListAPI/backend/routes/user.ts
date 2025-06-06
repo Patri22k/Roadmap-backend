@@ -1,5 +1,5 @@
 import {Router, Request, Response} from 'express';
-import {PrismaClient} from '../generated/prisma';
+import {PrismaClient} from "@prisma/client";
 import bcrypt from 'bcrypt';
 import {generateToken} from "../utils/jwt";
 import {loginUserSchema, registerUserSchema} from "../validations/userValidation";
