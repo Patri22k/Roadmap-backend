@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import {PrismaClient} from './generated/prisma';
 import { userRouter } from "./routes/user";
 
@@ -6,6 +7,11 @@ const app = express();
 app.use(express.json());
 const port = 3000;
 const prisma = new PrismaClient();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}))
 
 async function main() {
     // Here I can create new prisma queries
