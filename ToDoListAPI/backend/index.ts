@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {PrismaClient} from "@prisma/client";
 import { userRouter } from "./routes/user";
+import {todoListRouter} from "./routes/todoList";
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ main()
     })
 
 app.use('/auth', userRouter);
+app.use('/api', todoListRouter);
 
 app.listen(port, () => {
     console.log("Server is running on port " + port);
