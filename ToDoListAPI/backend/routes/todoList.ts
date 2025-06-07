@@ -6,7 +6,9 @@ import {AuthenticatedRequest, authToken} from "../middleware/authMiddleware";
 const router = Router();
 const prisma = new PrismaClient();
 
-router.post('/todos', authToken, async (req: AuthenticatedRequest, res: Response) => {
+router.use(authToken);
+
+router.post('/todos', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const {title, description} = todoSchemaValidation.parse(req.body);
 
@@ -32,7 +34,7 @@ router.post('/todos', authToken, async (req: AuthenticatedRequest, res: Response
   }
 });
 
-router.put('/todos/:id', authToken, async (req: AuthenticatedRequest, res: Response) => {
+router.put('/todos/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { title, description } = todoSchemaValidation.parse(req.body); // TODO: maybe add logic to mark as completed
     const todoId = req.params.id;
@@ -66,7 +68,7 @@ router.put('/todos/:id', authToken, async (req: AuthenticatedRequest, res: Respo
   }
 });
 
-router.delete('/todos/:id', authToken, async (req: AuthenticatedRequest, res: Response) => {
+router.delete('/todos/:id', async (req: AuthenticatedRequest, res: Response) => {
   try {
     const todoId = req.params.id;
     const userId = req.user?.userId;
@@ -93,7 +95,7 @@ router.delete('/todos/:id', authToken, async (req: AuthenticatedRequest, res: Re
   }
 });
 
-router.get("/todos", authToken, async (req: AuthenticatedRequest, res: Response) => {
+router.get("/todos", async (req: AuthenticatedRequest, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
