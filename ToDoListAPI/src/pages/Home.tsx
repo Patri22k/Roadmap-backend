@@ -5,8 +5,8 @@ const Home = () => {
   return (
     <AuthLayout>
       <AuthLayout.Header>
-        <h1 className="text-3xl">To Do List API</h1>
-        <p>This is a simple API for managing a to-do list.</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">To Do List</h1>
+        <p className="text-sm sm:text-base lg:text-lg">This is a simple project for managing a to-do list.</p>
       </AuthLayout.Header>
       <AuthLayout.Main>
         <CustomLink text="Register" to="/register"/>

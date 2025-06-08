@@ -1,6 +1,6 @@
 import {Router,Response} from "express";
 import {PrismaClient} from "@prisma/client";
-import todoSchemaValidation from "../validations/todoValidation";
+import {todoSchemaValidation} from "../validations/todoValidation";
 import {AuthenticatedRequest, authToken} from "../middleware/authMiddleware";
 
 const router = Router();

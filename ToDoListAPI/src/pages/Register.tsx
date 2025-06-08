@@ -51,17 +51,17 @@ const Register = () => {
       </AuthLayout.Header>
       <AuthLayout.Main>
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-3 w-full">
-          <input className="py-2 border rounded placeholder:pl-2" type="text" onChange={(e) => setName(e.target.value)}
+          <input className="py-2 border rounded pl-2" type="text" onChange={(e) => setName(e.target.value)}
                  value={name} placeholder="John Doe"/>
           {nameError && <p className="text-red-700">{nameError}</p>}
-          <input className="py-2 border rounded placeholder:pl-2" type="email"
+          <input className="py-2 border rounded pl-2" type="email"
                  onChange={(e) => setEmail(e.target.value)} value={email} placeholder="john@doe.com"/>
           {emailError && <p className="text-red-700">{emailError}</p>}
-          <input className="py-2 border rounded placeholder:pl-2" type="password"
+          <input className="py-2 border rounded pl-2" type="password"
                  onChange={(e) => setPassword(e.target.value)} value={password} placeholder="123456789"/>
           {passwordError && <p className="text-red-700">{passwordError}</p>}
           <button
-            className="text-center px-6 py-2 bg-gray-300 rounded-lg hover:text-amber-50 hover:bg-gray-700 hover:transition hover:duration-500"
+            className="text-sm sm:text-base lg:text-xl px-6 py-2 bg-gray-300 rounded-lg hover:text-amber-50 hover:bg-gray-700 hover:transition hover:duration-500"
             type="submit">Submit
           </button>
           {error && <p className="text-red-700">{error}</p>}
