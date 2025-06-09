@@ -1,9 +1,9 @@
 import {Request, Response, Router} from 'express';
 import {PrismaClient} from "@prisma/client";
 import bcrypt from 'bcrypt';
-import {generateToken, hashPassword} from "../utils/security_utils";
+import {generateToken, hashPassword} from "../../utils/security_utils";
 import {loginUserSchema, registerUserSchema} from "../validations/userValidation";
-import {handleError, PrismaErrorCode} from "../utils/handleError";
+import {handleError, PrismaErrorCode} from "../../utils/handleError";
 
 const router = Router();
 const prisma = new PrismaClient();
