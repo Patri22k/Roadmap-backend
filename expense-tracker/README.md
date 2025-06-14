@@ -4,7 +4,7 @@ A simple expense tracker application built with **Spring Boot** and Java,
 using **Maven** as the build tool. This application allows users to easily 
 track their expenses, categorize them, and view their spending over time.
 The output is stored to JSON file called `expenses.json` in the root of the 
-project. The project was inspired by the [Roadmap.sh](https://roadmap.sh/projects/expense-tracker) website.
+project.
 
 ## Features
 - add an expense with a description and amount

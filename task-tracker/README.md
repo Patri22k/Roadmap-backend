@@ -1,7 +1,12 @@
 # Task Tracker CLI
 
-This project is a simple Task Tracker CLI application built with Go (Golang). It is designed to help you manage tasks through a command-line interface, ideal for backend-first project tutorials like those found on [roadmap.sh](https://roadmap.sh/projects/task-tracker).  
-The application allows you to create, update, and delete tasks, making it a great way to get hands-on experience with Go while learning how to structure backend applications.
+This project is a simple Task Tracker CLI application built 
+with Go (Golang). It is designed to help you manage tasks 
+through a command-line interface, ideal for backend-first 
+project tutorials.  
+The application allows you to create, update, and delete 
+tasks, making it a great way to get hands-on experience 
+with Go while learning how to structure backend applications.
 
 ## Features
 - Add tasks with descriptions.

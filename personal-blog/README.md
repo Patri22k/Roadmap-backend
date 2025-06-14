@@ -3,7 +3,7 @@
 This project is a simple personal blog application with a 
 frontend and backend structure. The repository is set up in 
 a monorepo structure with separate directories for the frontend 
-and backend. The project is inspired by [Roadmap.sh](https://roadmap.sh/projects/personal-blog).
+and backend.
 
 ## Clone the Repository
 First, clone the repository to your local machine:
