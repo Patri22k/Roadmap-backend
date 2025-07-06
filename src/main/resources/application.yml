@@ -6,9 +6,9 @@ spring:
     import: optional:file:.env
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:blogging-platform-postgres-db}
-    username: ${POSTGRES_USER:user}
-    password: ${POSTGRES_PASSWORD:mypassword}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USER}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
