@@ -1,9 +1,9 @@
-package io.github.patri22k.blogging.platform.api.Service;
+package io.github.patri22k.blogging.platform.api.service;
 
-import io.github.patri22k.blogging.platform.api.Dto.PostDto;
-import io.github.patri22k.blogging.platform.api.Mapper.PostMapper;
-import io.github.patri22k.blogging.platform.api.Model.Post;
-import io.github.patri22k.blogging.platform.api.Repository.PostRepository;
+import io.github.patri22k.blogging.platform.api.dto.PostDto;
+import io.github.patri22k.blogging.platform.api.mapper.PostMapper;
+import io.github.patri22k.blogging.platform.api.model.Post;
+import io.github.patri22k.blogging.platform.api.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

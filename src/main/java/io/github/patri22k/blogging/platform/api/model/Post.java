@@ -1,4 +1,4 @@
-package io.github.patri22k.blogging.platform.api.Model;
+package io.github.patri22k.blogging.platform.api.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

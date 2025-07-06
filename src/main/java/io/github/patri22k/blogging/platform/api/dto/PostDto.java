@@ -1,4 +1,4 @@
-package io.github.patri22k.blogging.platform.api.Dto;
+package io.github.patri22k.blogging.platform.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

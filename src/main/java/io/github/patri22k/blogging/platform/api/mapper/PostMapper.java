@@ -1,7 +1,7 @@
-package io.github.patri22k.blogging.platform.api.Mapper;
+package io.github.patri22k.blogging.platform.api.mapper;
 
-import io.github.patri22k.blogging.platform.api.Dto.PostDto;
-import io.github.patri22k.blogging.platform.api.Model.Post;
+import io.github.patri22k.blogging.platform.api.dto.PostDto;
+import io.github.patri22k.blogging.platform.api.model.Post;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;

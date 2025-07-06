@@ -1,8 +1,8 @@
-package io.github.patri22k.blogging.platform.api.Controller;
+package io.github.patri22k.blogging.platform.api.controller;
 
-import io.github.patri22k.blogging.platform.api.Dto.PostDto;
-import io.github.patri22k.blogging.platform.api.Model.Post;
-import io.github.patri22k.blogging.platform.api.Service.PostService;
+import io.github.patri22k.blogging.platform.api.dto.PostDto;
+import io.github.patri22k.blogging.platform.api.model.Post;
+import io.github.patri22k.blogging.platform.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
