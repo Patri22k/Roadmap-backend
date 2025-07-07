@@ -28,13 +28,14 @@ public class PostMapper {
                 .build();
     }
 
-    public PostDto toDto(Post post) {
-        return PostDto.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .category(post.getCategory())
-                .tags(post.getTags())
-                .build();
+    public void updateEntityFromDto(PostDto postDto, Post post) {
+        validate(postDto);
+
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setCategory(postDto.getCategory());
+        post.setTags(postDto.getTags());
+        post.setUpdatedAt(new Date());
     }
 
     private void validate(PostDto dto) {
