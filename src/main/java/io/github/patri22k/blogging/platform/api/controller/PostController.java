@@ -4,6 +4,7 @@ import io.github.patri22k.blogging.platform.api.dto.PostDto;
 import io.github.patri22k.blogging.platform.api.model.Post;
 import io.github.patri22k.blogging.platform.api.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,8 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> create(@RequestBody PostDto postDto) {
-        return ResponseEntity.ok(postService.createPost(postDto));
+        Post savedPost = postService.createPost(postDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
     }
 
 }

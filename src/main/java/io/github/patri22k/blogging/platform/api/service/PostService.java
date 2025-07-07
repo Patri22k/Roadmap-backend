@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PostService extends PostMapper {
+public class PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;

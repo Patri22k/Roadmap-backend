@@ -1,9 +1,9 @@
 package io.github.patri22k.blogging.platform.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,9 +13,17 @@ import java.util.List;
 @Builder
 public class PostDto {
 
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String content;
+
+    @NotBlank
     private String category;
-    private List<String> tags;
+
+    @NotEmpty
+    @NotNull
+    private List<@NotBlank String> tags;
 
 }
