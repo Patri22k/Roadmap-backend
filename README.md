@@ -67,3 +67,44 @@ docker compose down -v
 | GET    | `/posts/:id`        | Retrieve a single post by ID |
 | GET    | `/posts`            | Retrieve all posts           |
 | GET    | `/posts?term=value` | Search posts by term         |
+
+## Tests
+The project includes simple integration tests that cover core
+operations such as creating, updating, deleting, and retrieving
+posts. The tests primarily validate HTTP response status codes,
+in line with the requirements of the Roadmap.sh assignment.
+
+### Test Naming Convention
+
+Tests follow the `what_when_then` format (also known as the
+**BDD style** — Behavior Driven Development). This convention
+improves readability and clearly communicates the intent of
+each test.
+
+Example:
+```java
+@Test
+void getRequest_whenPostIdExists_shouldReturnPost();
+```
+Structure:
+- **what:** the action being tested (e.g., `getRequest`)
+- **when:** the condition or context (e.g., `whenPostIdExists`)
+- **then:** the expected outcome (e.g., `shouldReturnPost`)
+
+This structure helps make test methods self-documenting.
+
+
+### Run Tests
+
+To run the tests, use the following command:
+```
+./gradlew test
+```
+
+### View Test Report
+
+After running the tests, you can view the test report in:
+`build/reports/tests/test/index.html`.
+
+**Note:** The tests use `MockMvc` to simulate HTTP requests,
+and require no active database connection.
